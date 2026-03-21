@@ -126,7 +126,15 @@ const resources = {
       removalRequest: 'Удаление данных',
       complaint: 'Жалоба',
       incorrectData: 'Неверная информация',
+
+      addPerson: 'Добавить персону',
+      addPersonSubtitle: 'После добавления персона будет отправлена на проверку модератором',
+
+
     },
+
+
+    
   },
   ky: {
     translation: {
@@ -251,6 +259,10 @@ const resources = {
       removalRequest: 'Маалыматты өчүрүү',
       complaint: 'Арыз',
       incorrectData: 'Туура эмес маалымат',
+
+      addPerson: 'Персон кошуу',
+      addPersonSubtitle: 'Кошулгандан кийин персон модератордун текшерүүсүнө жиберилет',
+
     },
   },
   en: {
@@ -376,6 +388,9 @@ const resources = {
       removalRequest: 'Data Removal',
       complaint: 'Complaint',
       incorrectData: 'Incorrect Information',
+
+      addPerson: 'Add Person',
+      addPersonSubtitle: 'After adding, the person will be sent for moderator review',
     },
   },
 };

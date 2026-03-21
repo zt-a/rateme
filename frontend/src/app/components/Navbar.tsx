@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { User, LogOut, Shield, Home, Globe, Trophy } from 'lucide-react';
+import { User, LogOut, Shield, Home, Globe, Trophy, UserPlus } from 'lucide-react';
 import { Button } from './ui/button';
 import { useAuth } from '../contexts/useAuth';
 import {
@@ -59,6 +59,12 @@ export function Navbar() {
               }`}>
                 <Trophy className={`w-4 h-4 ${isRatings ? 'text-yellow-400' : ''}`} />
                 <span className="text-sm font-medium">{t('ratings')}</span>
+              </div>
+            </Link>
+            <Link to="/add-person">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all bg-zinc-800/80 border border-zinc-700 text-zinc-300 hover:border-purple-500/50 hover:text-purple-400 hover:bg-zinc-800">
+                <UserPlus className="w-4 h-4" />
+                <span className="text-sm font-medium hidden sm:inline">{t('addPerson') || 'Добавить'}</span>
               </div>
             </Link>
           </div>

@@ -20,6 +20,7 @@ import { Takedown } from './pages/Takedown';
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
 import { Report } from './pages/Report';
+import { AddPerson } from './pages/AddPerson';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -79,6 +80,16 @@ export const router = createBrowserRouter([
         <Layout>
         <Ratings />
         </Layout>
+    ),
+  },
+  {
+    path: '/add-person',
+    element: (
+      <AuthGuard>
+        <Layout>
+          <AddPerson />
+        </Layout>
+      </AuthGuard>
     ),
   },
   {

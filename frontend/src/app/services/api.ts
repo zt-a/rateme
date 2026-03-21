@@ -326,6 +326,18 @@ class ApiService {
     return this.request<any>(`/admin/persons/${personId}`, {}, true);
   }
 
+  
+  async updatePersonStatus(personId: number, data: {
+    status: string;
+    consent_note?: string;
+    contact_email?: string;
+  }) {
+    return this.request<any>(`/persons/${personId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }, true);
+  }
+
   async createReport(data: {
     person_id?: number;
     name: string;
