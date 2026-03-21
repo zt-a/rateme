@@ -1,0 +1,26 @@
+import secrets
+from datetime import datetime, timedelta, timezone
+from jose import jwt, JWTError
+from config import settings
+
+
+def create_access_token(user_id: int) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    payload = {"sub": str(user_id), "exp": expire, "type": "access"}
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+
+
+def create_refresh_token() -> str:
+    """Генерирует случайный непрозрачный refresh токен"""
+    return secrets.token_urlsafe(64)
+
+
+def decode_access_token(token: str) -> int:
+    """Декодирует access токен и возвращает user_id. Бросает JWTError если невалиден."""
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
+        if payload.get("type") != "access":
+            raise JWTError("Invalid token type")
+        return int(payload["sub"])
+    except JWTError:
+        raise
