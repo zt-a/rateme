@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime, date
 from typing import Any, Dict
-
+from models.person import PersonStatus
 
 # ───────────── USER ─────────────
 
@@ -84,6 +84,9 @@ class AdminPersonUpdateRequest(BaseModel):
     relationship_status: str | None = None
     gender: str | None = None
     deleted_at: datetime | None = None  # для восстановления
+    status: PersonStatus | None = None        # добавь
+    consent_note: str | None = None           # добавь
+    contact_email: str | None = None          # добавь
 
 
 # ───────────── COMMENT ─────────────
