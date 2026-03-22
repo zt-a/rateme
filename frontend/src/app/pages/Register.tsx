@@ -28,7 +28,7 @@ export function Register() {
 
     try {
       await register(email, password);
-      toast.success(t('registerSuccess'));
+      toast.success(t('registerSuccessAndSendConfirmEmail'));
       navigate('/login');
     } catch (error: any) {
       toast.error(error.message || t('error'));
