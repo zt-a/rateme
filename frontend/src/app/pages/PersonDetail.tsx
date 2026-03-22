@@ -276,7 +276,7 @@ export function PersonDetail() {
             )}
 
             {/* Like/Dislike Buttons */}
-            {isAuthenticated && person && (
+            {isAuthenticated ? (
               <LikeDislikeButton
                 key={person.id + String(person.user_reaction)}
                 personId={person.id}
@@ -285,6 +285,35 @@ export function PersonDetail() {
                 initialReaction={person.user_reaction}
                 onUpdate={loadPerson}
               />
+            ) : (
+              <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-3 text-zinc-500">
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-5 h-5" />
+                      {person.likes_count}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      ✕ {person.dislikes_count}
+                    </span>
+                  </div>
+                  <p className="text-zinc-400 text-sm">
+                    Войдите чтобы оценить
+                  </p>
+                </div>
+                <div className="flex gap-2 flex-shrink-0">
+                  <a href="/login">
+                    <Button size="sm" variant="outline" className="border-zinc-700">
+                      {t('login')}
+                    </Button>
+                  </a>
+                  <a href="/register">
+                    <Button size="sm" className="bg-gradient-to-r from-purple-600 to-pink-600">
+                      {t('register')}
+                    </Button>
+                  </a>
+                </div>
+              </div>
             )}
 
             {/* Info */}
