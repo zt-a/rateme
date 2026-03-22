@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     APP_URL: str = "http://localhost:8000"
     FRONTEND_URL: str = "http://localhost:5173"
 
+    # Admin
+    ADMIN_EMAIL: str = "admin@personrating.local"
+    ADMIN_PASSWORD: str | None = None
+    ADMIN_USERNAME: str = "admin"
+
     @property
     def DATABASE_URL(self) -> str:
         return (

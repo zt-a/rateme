@@ -5,6 +5,7 @@ from db.base import Base
 import models  # noqa: F401
 from logging_config import logger
 from utils.admin_utils import create_admin
+from config import settings
 
 async def init_db():
     """Создает все таблицы"""
@@ -23,9 +24,9 @@ async def main_loop():
     async with AsyncSessionLocal() as session:
         await create_admin(
             session=session,
-            email="zt20061113@gmail.com",
-            passw="devZhyrgal006"
+            email=settings.ADMIN_EMAIL,
+            passw=settings.ADMIN_PASSWORD,
         )
         logger.info("Server running... Press Ctrl+C to exit.")
-        while True:
-            await asyncio.sleep(1)
+    while True:
+        await asyncio.sleep(1)
