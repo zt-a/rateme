@@ -6,7 +6,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from logging_config import logger
-from utils.db_utils import init_db, main_loop, drop_db
+from utils.db_utils import init_db, main_loop, drop_db  # noqa: F401
 from config import settings
 from routes import routers
 from pytz import utc

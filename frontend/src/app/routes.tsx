@@ -26,6 +26,8 @@ import { ModeratorPersons } from './pages/moderator/ModeratorPersons';
 import { ModeratorComments } from './pages/moderator/ModeratorComments';
 import { ModeratorReports } from './pages/moderator/ModeratorReports';
 
+import { ConfirmEmail } from './pages/ConfirmEmail';
+
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
@@ -174,6 +176,14 @@ export const router = createBrowserRouter([
       { path: 'comments', element: <ModeratorComments /> },
       { path: 'reports', element: <ModeratorReports /> },
     ],
+  },
+  {
+    path: '/confirm-email',
+    element: (
+      <Layout>
+        <ConfirmEmail/>
+      </Layout>
+    )
   },
   {
     path: '*',
