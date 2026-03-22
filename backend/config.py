@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
     SMTP_USER: str
-    SMTP_PASSWORD: str
+    SMTP_PASSWORD: str = "ehfsnqbnzkdlmkfx"
     SMTP_FROM: str
 
     # App URL (для ссылок в письмах)
@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     CLOUDINARY_CLOUD_NAME: str = ""
     CLOUDINARY_API_KEY: str = ""
     CLOUDINARY_API_SECRET: str = ""
+
+    RETENTION_DAYS: int = 7
 
     @property
     def DATABASE_URL(self) -> str:

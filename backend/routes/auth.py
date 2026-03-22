@@ -17,6 +17,7 @@ from utils.password_utils import hash_password, verify_password
 from utils.jwt_utils import create_access_token, create_refresh_token
 from utils.email_utils import send_confirm_email, send_reset_password_email
 from dependencies.auth import get_current_user
+from fastapi.responses import RedirectResponse
 from config import settings
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -44,23 +45,32 @@ async def register(data: RegisterRequest, session: AsyncSession = Depends(get_se
 
 
 # ───────────────────────────── CONFIRM EMAIL ─────────────────────────────
-
 @router.get("/confirm-email")
 async def confirm_email(token: str, session: AsyncSession = Depends(get_session)):
     user = await session.scalar(
         select(User).where(User.meta["confirm_token"].astext == token)
     )
+
     if not user:
-        raise HTTPException(status_code=400, detail="Invalid or expired token")
+        return RedirectResponse(
+            url=f"{settings.FRONTEND_URL}/confirm-email?status=error",
+            status_code=302
+        )
+
     if user.is_confirm:
-        return {"detail": "Email already confirmed"}
+        return RedirectResponse(
+            url=f"{settings.FRONTEND_URL}/confirm-email?status=already",
+            status_code=302
+        )
 
     user.is_confirm = True
     user.meta.pop("confirm_token", None)
     await session.commit()
-    return {"detail": "Email confirmed successfully"}
 
-
+    return RedirectResponse(
+        url=f"{settings.FRONTEND_URL}/confirm-email?status=success",
+        status_code=302
+    )
 # ───────────────────────────── LOGIN ─────────────────────────────
 
 @router.post("/login", response_model=TokenResponse)
