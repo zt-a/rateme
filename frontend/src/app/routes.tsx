@@ -21,6 +21,10 @@ import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
 import { Report } from './pages/Report';
 import { AddPerson } from './pages/AddPerson';
+import { ModeratorLayout } from './pages/moderator/ModeratorLayout';
+import { ModeratorPersons } from './pages/moderator/ModeratorPersons';
+import { ModeratorComments } from './pages/moderator/ModeratorComments';
+import { ModeratorReports } from './pages/moderator/ModeratorReports';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -153,6 +157,22 @@ export const router = createBrowserRouter([
         path: 'reports', 
         element: <AdminReports /> 
       },
+    ],
+  },
+  {
+    path: '/moderator',
+    element: (
+      <AuthGuard requireModerator>
+        <Layout>
+          <ModeratorLayout />
+        </Layout>
+      </AuthGuard>
+    ),
+    children: [
+      { index: true, element: <Navigate to="/moderator/persons" replace /> },
+      { path: 'persons', element: <ModeratorPersons /> },
+      { path: 'comments', element: <ModeratorComments /> },
+      { path: 'reports', element: <ModeratorReports /> },
     ],
   },
   {

@@ -368,6 +368,23 @@ class ApiService {
       body: JSON.stringify({ status }),
     }, true);
   }
+
+  // Moderator endpoints
+  async moderatorListPersons(skip = 0, limit = 100, includeDeleted = false) {
+    return this.request<any[]>(`/moderator/persons?skip=${skip}&limit=${limit}&include_deleted=${includeDeleted}`, {}, true);
+  }
+
+  async moderatorListComments(skip = 0, limit = 100, includeDeleted = false) {
+    return this.request<any[]>(`/moderator/comments?skip=${skip}&limit=${limit}&include_deleted=${includeDeleted}`, {}, true);
+  }
+
+  async moderatorDeleteComment(commentId: number) {
+    return this.request(`/moderator/comments/${commentId}`, { method: 'DELETE' }, true);
+  }
+
+  async moderatorRestoreComment(commentId: number) {
+    return this.request<any>(`/moderator/comments/${commentId}/restore`, { method: 'POST' }, true);
+  }
 }
 
 export const api = new ApiService();

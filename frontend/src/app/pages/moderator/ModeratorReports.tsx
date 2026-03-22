@@ -1,0 +1,1 @@
+export { AdminReports as ModeratorReports } from '../admin/AdminReports';
