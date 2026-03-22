@@ -118,7 +118,7 @@ export function Navbar() {
                       {t('myProfile')}
                     </Link>
                   </DropdownMenuItem>
-                  {(isAdmin || isModerator) && (
+                  {(isAdmin) && (
                     <>
                       <DropdownMenuSeparator className="bg-zinc-800" />
                       <DropdownMenuItem asChild>
@@ -137,14 +137,6 @@ export function Navbar() {
                           <Link to="/moderator" className="flex items-center gap-2 cursor-pointer text-white">
                             <Shield className="w-4 h-4" />
                             Панель модератора
-                          </Link>
-                        </DropdownMenuItem>
-                      )}
-                      {isAdmin && (
-                        <DropdownMenuItem asChild>
-                          <Link to="/admin" className="flex items-center gap-2 cursor-pointer text-white">
-                            <Shield className="w-4 h-4" />
-                            {t('adminPanel')}
                           </Link>
                         </DropdownMenuItem>
                       )}
