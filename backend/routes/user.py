@@ -7,6 +7,10 @@ from db.connection import get_session
 from dependencies.auth import get_current_user
 from models.user import User
 from schemas.user import UserResponse, UserUpdateRequest
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+from models.person import Person
+from schemas.person import PersonListResponse
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -58,3 +62,23 @@ async def deactivate_me(
 
     await session.commit()
     return {"detail": "Account deactivated successfully"}
+
+
+@router.get("/me/persons", response_model=list[PersonListResponse])
+async def get_my_persons(
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """Персоны добавленные текущим пользователем"""
+    result = await session.scalars(
+        select(Person)
+        .options(
+            selectinload(Person.photos),
+            selectinload(Person.reactions),
+            selectinload(Person.comments),
+        )
+        .where(Person.submitted_by == current_user.id)
+        .where(Person.deleted_at.is_(None))
+        .order_by(Person.created_at.desc())
+    )
+    return result.all()

@@ -131,6 +131,8 @@ const resources = {
       addPersonSubtitle: 'После добавления персона будет отправлена на проверку модератором',
 
 
+      myPersons: 'Мои персоны',
+
     },
 
 
@@ -263,6 +265,7 @@ const resources = {
       addPerson: 'Персон кошуу',
       addPersonSubtitle: 'Кошулгандан кийин персон модератордун текшерүүсүнө жиберилет',
 
+      myPersons: 'Менин персондорум',
     },
   },
   en: {
@@ -391,6 +394,8 @@ const resources = {
 
       addPerson: 'Add Person',
       addPersonSubtitle: 'After adding, the person will be sent for moderator review',
+
+      myPersons: 'My Persons',
     },
   },
 };

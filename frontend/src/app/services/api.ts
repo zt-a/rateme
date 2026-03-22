@@ -143,6 +143,10 @@ class ApiService {
     return this.request<any>(`/persons/${id}`, {}, true);
   }
 
+  async getMyPersons() {
+    return this.request<any[]>('/users/me/persons', {}, true);
+  }
+
   async getRatings(skip = 0, limit = 20) {
     return this.request<any[]>(`/persons/ratings/top?skip=${skip}&limit=${limit}`, {}, true);
   }
