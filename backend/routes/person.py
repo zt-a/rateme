@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from utils.jwt_utils import decode_access_token
 from utils.email_utils import send_email, get_contact_email_body, get_agreed_email_body, get_rejected_email_body
@@ -11,8 +11,8 @@ from dependencies.auth import get_current_user, get_moderator
 from models.user import User
 from models.person import Person, PersonReaction, PersonComment, ReactionType, PersonStatus
 from schemas.person import (
-    PersonCreateRequest, PersonUpdateRequest, PersonResponse, PersonListResponse, PersonPublicResponse,
-    PersonStatusUpdate,
+    PersonCreateRequest, PersonUpdateRequest, PersonResponse, PersonListResponse,
+    PersonStatusUpdate, PersonListPageResponse, PersonPublicResponse,
     ReactionRequest, ReactionResponse,
     CommentCreateRequest, CommentUpdateRequest, CommentResponse,
 )
@@ -45,17 +45,23 @@ def _check_not_deleted(person: Person):
 #  PERSONS CRUD
 # ═══════════════════════════════════════════════
 
-@router.get("", response_model=list[PersonListResponse])
+@router.get("", response_model=PersonListPageResponse)
 async def list_persons(
     session: AsyncSession = Depends(get_session),
     skip: int = 0,
     limit: int = 20,
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ):
+    total = await session.scalar(
+        select(func.count(Person.id))
+        .where(Person.deleted_at.is_(None))
+        .where(Person.status == PersonStatus.PUBLISHED)
+    ) or 0
+
     result = await session.scalars(
         _person_query()
         .where(Person.deleted_at.is_(None))
-        .where(Person.status == PersonStatus.PUBLISHED)  # только опубликованные
+        .where(Person.status == PersonStatus.PUBLISHED)
         .offset(skip).limit(limit)
     )
     persons = result.all()
@@ -85,8 +91,15 @@ async def list_persons(
         data.user_reaction = user_reactions.get(person.id, None)
         result_list.append(data)
 
-    return result_list
+    page = skip // limit
 
+    return PersonListPageResponse(
+        items=result_list,
+        total=total,
+        page=page,
+        limit=limit,
+        pages=(total + limit - 1) // limit,
+    )
 
 @router.get("/{person_id}", response_model=Union[PersonResponse, PersonPublicResponse])
 async def get_person(

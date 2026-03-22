@@ -31,6 +31,7 @@ class Settings(BaseSettings):
 
     # App URL (для ссылок в письмах)
     APP_URL: str = "http://localhost:8000"
+    FRONTEND_URL: str = "http://localhost:5173"
 
     @property
     def DATABASE_URL(self) -> str:

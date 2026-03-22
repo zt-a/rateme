@@ -137,7 +137,13 @@ class ApiService {
 
   // Person endpoints
   async listPersons(skip = 0, limit = 20) {
-    return this.request<any[]>(`/persons?skip=${skip}&limit=${limit}`, {}, true);
+    return this.request<{
+      items: any[];
+      total: number;
+      page: number;
+      limit: number;
+      pages: number;
+    }>(`/persons?skip=${skip}&limit=${limit}`, {}, true);
   }
   
   async getPerson(id: number) {

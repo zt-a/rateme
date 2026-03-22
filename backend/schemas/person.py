@@ -148,6 +148,13 @@ class PersonListResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class PersonListPageResponse(BaseModel):
+    items: list[PersonListResponse]
+    total: int
+    page: int
+    limit: int
+    pages: int
+
 # ───────────── REACTION ─────────────
 class ReactionRequest(BaseModel):
     type: ReactionType
