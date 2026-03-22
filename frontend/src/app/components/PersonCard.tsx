@@ -9,7 +9,7 @@ import { api } from '../services/api';
 import { toast } from 'sonner';
 import { useAuth } from '../contexts/useAuth';
 
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../services/config';
 const FALLBACK = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400';
 
 interface PersonCardProps {

@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../services/config';
+
 
 class ApiService {
   private getToken(): string | null {

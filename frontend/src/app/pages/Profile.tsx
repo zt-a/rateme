@@ -13,7 +13,7 @@ import { Badge } from '../components/ui/badge';
 import { RoleBadge } from '../components/RoleBadge';
 import { toast } from 'sonner';
 
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../services/config';
 
 const statusColors: Record<string, string> = {
   pending:   'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',

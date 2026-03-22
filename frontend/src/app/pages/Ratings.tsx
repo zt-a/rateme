@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Trophy, Medal, Award, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
 import { Button } from '../components/ui/button';
+import { API_BASE_URL } from '../services/config';
 
 const LIMIT = 10;
-const API_BASE_URL = 'http://localhost:8000';
 const FALLBACK = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=200';
 
 export function Ratings() {

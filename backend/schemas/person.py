@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import date, datetime
 from enum import Enum
 
@@ -96,6 +96,42 @@ class PersonResponse(BaseModel):
     consent_note: str | None = None
     user_reaction: str | None = None
     model_config = {"from_attributes": True}
+
+class PersonPublicResponse(BaseModel):
+    id: int
+    name: str
+    full_name: str
+    phone: int | None = Field(default=None, exclude=False)
+    email: str | None = None
+    description: str | None
+    instagram: str | None
+    telegram: str | None
+    birth_year: int | None
+    birthday: date | None
+    study_place: str | None
+    work_place: str | None
+    relationship_status: str | None
+    gender: Gender
+    likes_count: int
+    dislikes_count: int
+    rating: int
+    photos: list[PersonPhotoResponse]
+    created_at: datetime
+    updated_at: datetime
+    deleted_at: datetime | None
+    status: PersonStatus = PersonStatus.PUBLISHED
+    contact_email: str | None = None
+    consent_note: str | None = None
+    user_reaction: str | None = None
+
+    model_config = {"from_attributes": True}
+
+    def model_post_init(self, __context: any) -> None:
+        # Скрываем приватные поля после валидации
+        object.__setattr__(self, 'phone', None)
+        object.__setattr__(self, 'email', None)
+        object.__setattr__(self, 'contact_email', None)
+        object.__setattr__(self, 'consent_note', None)
 
 
 class PersonListResponse(BaseModel):

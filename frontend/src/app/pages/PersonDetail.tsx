@@ -12,7 +12,7 @@ import { Progress } from '../components/ui/progress';
 import { useAuth } from '../contexts/useAuth';
 import { toast } from 'sonner';
 
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../services/config';
 
 export function PersonDetail() {
   const { id } = useParams<{ id: string }>();
@@ -229,6 +229,51 @@ export function PersonDetail() {
               </div>
               <Progress value={ratingPercent} className="h-3" />
             </div>
+
+            {/* Статус персоны — показываем если не published */}
+            {person.status && person.status !== 'published' && (
+              <div className={`rounded-xl p-4 border flex items-center gap-3 ${
+                person.status === 'pending'   ? 'bg-yellow-500/10 border-yellow-500/30' :
+                person.status === 'contacted' ? 'bg-blue-500/10 border-blue-500/30' :
+                person.status === 'agreed'    ? 'bg-purple-500/10 border-purple-500/30' :
+                person.status === 'rejected'  ? 'bg-red-500/10 border-red-500/30' :
+                'bg-zinc-900 border-zinc-800'
+              }`}>
+                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                  person.status === 'pending'   ? 'bg-yellow-400' :
+                  person.status === 'contacted' ? 'bg-blue-400' :
+                  person.status === 'agreed'    ? 'bg-purple-400' :
+                  person.status === 'rejected'  ? 'bg-red-400' :
+                  'bg-zinc-400'
+                }`} />
+                <div>
+                  <p className={`text-sm font-medium ${
+                    person.status === 'pending'   ? 'text-yellow-400' :
+                    person.status === 'contacted' ? 'text-blue-400' :
+                    person.status === 'agreed'    ? 'text-purple-400' :
+                    person.status === 'rejected'  ? 'text-red-400' :
+                    'text-zinc-400'
+                  }`}>
+                    {{
+                      pending:   'Ожидает проверки модератором',
+                      contacted: 'Модератор связывается с персоной',
+                      agreed:    'Персона дала согласие',
+                      rejected:  'Персона отказалась от публикации',
+                    }[person.status as string] || person.status}
+                  </p>
+                  {person.status === 'pending' && (
+                    <p className="text-zinc-500 text-xs mt-0.5">
+                      Профиль будет виден всем после одобрения
+                    </p>
+                  )}
+                  {person.status === 'rejected' && (
+                    <p className="text-zinc-500 text-xs mt-0.5">
+                      Профиль будет удалён в течение 24 часов
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Like/Dislike Buttons */}
             {isAuthenticated && person && (

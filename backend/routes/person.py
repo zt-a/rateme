@@ -11,11 +11,15 @@ from dependencies.auth import get_current_user, get_moderator
 from models.user import User
 from models.person import Person, PersonReaction, PersonComment, ReactionType, PersonStatus
 from schemas.person import (
-    PersonCreateRequest, PersonUpdateRequest, PersonResponse, PersonListResponse,
+    PersonCreateRequest, PersonUpdateRequest, PersonResponse, PersonListResponse, PersonPublicResponse,
     PersonStatusUpdate,
     ReactionRequest, ReactionResponse,
     CommentCreateRequest, CommentUpdateRequest, CommentResponse,
 )
+
+from dependencies.auth import get_current_user_optional
+from typing import Union
+
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional
 from config import settings
@@ -84,11 +88,12 @@ async def list_persons(
     return result_list
 
 
-@router.get("/{person_id}", response_model=PersonResponse)
+@router.get("/{person_id}", response_model=Union[PersonResponse, PersonPublicResponse])
 async def get_person(
     person_id: int,
     session: AsyncSession = Depends(get_session),
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+    current_user: User | None = Depends(get_current_user_optional),
 ):
     person = await session.scalar(_person_query().where(Person.id == person_id))
     if not person:
@@ -110,10 +115,16 @@ async def get_person(
         except Exception:
             pass
 
-    data = PersonResponse.model_validate(person)
+    # Модераторы и админы видят все данные
+    is_privileged = current_user and (current_user.is_moderator or current_user.is_admin)
+
+    if is_privileged:
+        data = PersonResponse.model_validate(person)
+    else:
+        data = PersonPublicResponse.model_validate(person)
+
     data.user_reaction = user_reaction
     return data
-
 
 @router.post("", response_model=PersonResponse, status_code=status.HTTP_201_CREATED)
 async def create_person(
