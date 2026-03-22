@@ -85,7 +85,7 @@ const resources = {
       loginSuccess: 'Вход выполнен успешно',
       logoutSuccess: 'Выход выполнен успешно',
       registerSuccess: 'Регистрация прошла успешно',
-      registerSuccessAndSendConfirmEmail: "Регистрация прошла успешно и на ваше почту отправленя ссылка подтверждение",
+      registerSuccessAndSendConfirmEmail: "Регистрация прошла успешно, и ссылка для подтверждения отправлена ​​на ваш электронный адрес.",
       updateSuccess: 'Обновлено успешно',
       deleteSuccess: 'Удалено успешно',
       error: 'Ошибка',
