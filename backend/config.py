@@ -38,6 +38,11 @@ class Settings(BaseSettings):
     ADMIN_PASSWORD: str | None = None
     ADMIN_USERNAME: str = "admin"
 
+    # Cloudinary
+    CLOUDINARY_CLOUD_NAME: str = ""
+    CLOUDINARY_API_KEY: str = ""
+    CLOUDINARY_API_SECRET: str = ""
+
     @property
     def DATABASE_URL(self) -> str:
         return (

@@ -9,7 +9,7 @@ import { api } from '../services/api';
 import { toast } from 'sonner';
 import { useAuth } from '../contexts/useAuth';
 
-import { API_BASE_URL } from '../services/config';
+import { getPhotoUrl } from '../services/config';
 const FALLBACK = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400';
 
 interface PersonCardProps {
@@ -40,7 +40,7 @@ export function PersonCard({ person }: PersonCardProps) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const photos = person.photos.length > 0
-    ? person.photos.map(p => `${API_BASE_URL}/${p.file_path}`)
+    ? person.photos.map(p => getPhotoUrl(p.file_path))
     : [FALLBACK];
 
   const goTo = (dir: 'left' | 'right') => {

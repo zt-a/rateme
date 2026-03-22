@@ -20,7 +20,7 @@ import {
 } from '../../components/ui/select';
 import { toast } from 'sonner';
 
-import { API_BASE_URL } from '../../services/config';
+import { getPhotoUrl } from '../../services/config';
 
 const statusColors: Record<string, string> = {
   pending:   'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
@@ -330,7 +330,7 @@ export function AdminPersons() {
                     <div className="flex flex-wrap gap-2">
                       {editingPerson.photos.map((photo: any) => (
                         <div key={photo.id} className="relative">
-                          <img src={`${API_BASE_URL}/${photo.file_path}`} className="w-20 h-20 object-cover rounded" />
+                          <img src={getPhotoUrl(photo.file_path)} className="w-20 h-20 object-cover rounded" />
                           <button type="button" onClick={() => handleDeletePhoto(photo.id)} className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
                         </div>
                       ))}

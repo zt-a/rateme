@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Trophy, Medal, Award, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
 import { Button } from '../components/ui/button';
-import { API_BASE_URL } from '../services/config';
+import { getPhotoUrl } from '../services/config';
 
 const LIMIT = 10;
 const FALLBACK = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=200';
@@ -35,7 +35,7 @@ export function Ratings() {
 
   const getPhoto = (person: any) =>
     person?.photos[0]?.file_path
-      ? `${API_BASE_URL}/${person.photos[0].file_path}`
+      ? getPhotoUrl(person.photos[0].file_path)
       : FALLBACK;
 
   const getRankIcon = (index: number) => {

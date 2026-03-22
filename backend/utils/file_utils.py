@@ -1,25 +1,25 @@
 import uuid
 import os
-import aiofiles
+import cloudinary
+import cloudinary.uploader
 from fastapi import UploadFile, HTTPException
+from config import settings
 
-MEDIA_ROOT = "media"
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
-
-def generate_filename(ext: str) -> str:
-    return f"{uuid.uuid4()}.{ext}"
-
-
-def get_person_upload_dir(person_id: int) -> str:
-    return os.path.join(MEDIA_ROOT, "persons", str(person_id))
-
+# Настройка Cloudinary
+cloudinary.config(
+    cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+    api_key=settings.CLOUDINARY_API_KEY,
+    api_secret=settings.CLOUDINARY_API_SECRET,
+    secure=True,
+)
 
 async def save_upload_file(file: UploadFile, person_id: int) -> str:
     """
-    Сохраняет файл на диск.
-    Возвращает относительный путь: media/persons/{person_id}/{uuid}.ext
+    Загружает файл в Cloudinary.
+    Возвращает URL файла.
     """
     if file.content_type not in ALLOWED_IMAGE_TYPES:
         raise HTTPException(
@@ -27,28 +27,43 @@ async def save_upload_file(file: UploadFile, person_id: int) -> str:
             detail=f"Invalid file type '{file.content_type}'. Allowed: jpeg, png, webp, gif"
         )
 
-    # Читаем содержимое и проверяем размер
     contents = await file.read()
+
     if len(contents) > MAX_FILE_SIZE:
         raise HTTPException(status_code=400, detail="File too large. Max size is 10MB")
 
-    # Определяем расширение
-    ext = file.content_type.split("/")[-1]
-    if ext == "jpeg":
-        ext = "jpg"
+    # Загружаем в Cloudinary
+    public_id = f"rateme/persons/{person_id}/{uuid.uuid4()}"
+    result = cloudinary.uploader.upload(
+        contents,
+        public_id=public_id,
+        folder=f"rateme/persons/{person_id}",
+        resource_type="image",
+        transformation=[
+            {"width": 800, "height": 1067, "crop": "limit"},  # максимум 800x1067
+            {"quality": "auto"},
+            {"fetch_format": "auto"},
+        ]
+    )
 
-    filename = generate_filename(ext)
-    upload_dir = get_person_upload_dir(person_id)
-    os.makedirs(upload_dir, exist_ok=True)
-
-    file_path = os.path.join(upload_dir, filename)
-    async with aiofiles.open(file_path, "wb") as f:
-        await f.write(contents)
-
-    return file_path
+    return result["secure_url"]
 
 
 def delete_file(file_path: str) -> None:
-    """Удаляет файл с диска если существует"""
-    if file_path and os.path.exists(file_path):
-        os.remove(file_path)
+    """Удаляет файл из Cloudinary по URL или public_id"""
+    if not file_path:
+        return
+    try:
+        # Если это Cloudinary URL — извлекаем public_id
+        if "cloudinary.com" in file_path:
+            # URL формат: https://res.cloudinary.com/cloud/image/upload/v123/rateme/persons/1/uuid.jpg
+            parts = file_path.split("/upload/")
+            if len(parts) == 2:
+                public_id = parts[1].split(".")[0]  # убираем расширение
+                cloudinary.uploader.destroy(public_id)
+        else:
+            # Старый локальный файл
+            if os.path.exists(file_path):
+                os.remove(file_path)
+    except Exception:
+        pass

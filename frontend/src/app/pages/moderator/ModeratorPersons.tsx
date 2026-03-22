@@ -20,7 +20,7 @@ import {
 } from '../../components/ui/select';
 import { toast } from 'sonner';
 
-import { API_BASE_URL } from '../../services/config';
+import { getPhotoUrl } from '../../services/config';
 
 const statusColors: Record<string, string> = {
   pending:   'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
@@ -206,7 +206,7 @@ export function ModeratorPersons() {
                   <TableCell>
                     <img
                       src={person.photos[0]?.file_path
-                        ? `${API_BASE_URL}/${person.photos[0].file_path}`
+                        ? getPhotoUrl(person.photos[0].file_path)
                         : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=60'}
                       className="w-10 h-10 rounded-full object-cover"
                       alt={person.name}

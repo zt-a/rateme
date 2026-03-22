@@ -12,7 +12,7 @@ import { Progress } from '../components/ui/progress';
 import { useAuth } from '../contexts/useAuth';
 import { toast } from 'sonner';
 
-import { API_BASE_URL } from '../services/config';
+import { getPhotoUrl } from '../services/config';
 
 export function PersonDetail() {
   const { id } = useParams<{ id: string }>();
@@ -121,7 +121,7 @@ export function PersonDetail() {
   }
 
   const photos = person.photos.length > 0
-    ? person.photos.map((p: any) => `${API_BASE_URL}/${p.file_path}`)
+    ? person.photos.map((p: any) => getPhotoUrl(p.file_path))
     : ['https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=800'];
 
   const ratingPercent = Math.min(100, (person.rating / 100) * 100);
@@ -202,7 +202,7 @@ export function PersonDetail() {
                     }}
                   >
                     <img
-                      src={`${API_BASE_URL}/${photo.file_path}`}
+                      src={getPhotoUrl(photo.file_path)}
                       alt=""
                       className="w-full h-full object-cover"
                     />
