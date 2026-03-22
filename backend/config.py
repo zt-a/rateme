@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     CLOUDINARY_API_SECRET: str = ""
 
     RETENTION_DAYS: int = 7
+    AUDIT_ENABLED: bool = False
 
     @property
     def DATABASE_URL(self) -> str:

@@ -6,7 +6,7 @@ from datetime import datetime, date
 from decimal import Decimal
 from models.audit import AuditLog, ActionType
 from audit_context import current_user_id, current_ip, current_user_agent
-
+from config import settings
 
 def serialize_value(val):
     """Конвертирует не-JSON-сериализуемые типы"""
@@ -49,13 +49,17 @@ def create_audit_log(session: Session, instance, action: ActionType):
     )
     session.add(log)
 
-
 @event.listens_for(Session, "before_flush")
 def audit_before_flush(session, flush_context, instances):
+    if not settings.AUDIT_ENABLED:
+        return
+
     for obj in session.new:
         create_audit_log(session, obj, ActionType.CREATE)
+
     for obj in session.dirty:
         if session.is_modified(obj, include_collections=False):
             create_audit_log(session, obj, ActionType.UPDATE)
+
     for obj in session.deleted:
         create_audit_log(session, obj, ActionType.DELETE)
